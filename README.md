@@ -1,54 +1,70 @@
-🐧 Penguins Clustering with KMeans
+# 🐧 Penguin Species Clustering with KMeans
 
-This project applies unsupervised learning techniques to cluster penguin species based on the Palmer Penguins dataset
-. Using KMeans clustering, feature engineering, and evaluation metrics, we analyze how well the algorithm can separate species without labels.
+This project applies unsupervised machine learning techniques to cluster penguin species based on the Palmer Penguins dataset. Using KMeans clustering, feature engineering, and evaluation metrics, we analyze how effectively the algorithm can separate species without the need for labeled data.
 
-📌 Project Overview
+# 📌 Project Overview
+This analysis follows a structured four-step process:
 
-Preprocessed the dataset by dropping irrelevant columns, encoding categorical variables, and normalizing features.
+Data Preprocessing: The dataset was prepared by dropping irrelevant columns, handling missing values, encoding categorical variables, and normalizing features to ensure consistency.
 
-Applied KMeans clustering with the Elbow Method to determine the optimal number of clusters.
+KMeans Clustering: The KMeans algorithm was applied. The optimal number of clusters (k) was determined using the Elbow Method to identify the point of diminishing returns in the sum of squared distances.
 
-Evaluated clustering quality using Purity and Silhouette Score.
+Evaluation: The performance of the clustering was evaluated using key metrics:
 
-Visualized results with scatterplots, centroid plots, and silhouette diagrams.
+Purity Score: To measure how well our clusters align with the true penguin species labels.
 
-Compared learned clusters to true species labels to assess model effectiveness.
+Silhouette Score: To assess the cohesion within each cluster and the separation between different clusters.
 
-⚙️ Tech Stack
+Visualization: We visualized the results using scatterplots, centroid plots, and silhouette diagrams to provide a clear understanding of the cluster distributions and quality.
 
-Python
+# ⚙️ Tech Stack
+This project was built using the following Python libraries, a standard stack for data science and machine learning:
 
-Pandas, NumPy, Matplotlib, Seaborn → data preprocessing & visualization
+Pandas & NumPy: Essential for data preprocessing, manipulation, and numerical operations.
 
-Scikit-learn → KMeans, scaling, clustering metrics
+Matplotlib & Seaborn: Used for creating all the data visualizations.
 
-SciPy → distance calculations
+Scikit-learn: The core library for implementing KMeans, data scaling, and calculating clustering metrics.
 
-📊 Key Results
+SciPy: Utilized for distance calculations, such as the cdist function.
 
-Optimal number of clusters: 3 (matching the true number of penguin species).
-<img width="220" height="78" alt="image" src="https://github.com/user-attachments/assets/7d5642c0-0356-4a06-8089-a77a8b0f6978" />
+# 📊 Key Results
+The unsupervised KMeans model successfully identified distinct clusters that closely align with the known penguin species.
 
-<img width="473" height="75" alt="image" src="https://github.com/user-attachments/assets/00763966-b92b-453b-b5a1-71291595a181" />
+Optimal Number of Clusters: 3
+The Elbow Method analysis clearly indicated that 3 clusters was the optimal number, which precisely matches the three species of penguins in the dataset (Adelie, Chinstrap, and Gentoo).
 
-
-Purity: ~0.9, showing strong alignment between clusters and species.
-<img width="128" height="22" alt="image" src="https://github.com/user-attachments/assets/8a0fec9f-cc30-4829-a695-bcf737c577f1" />
-
-Silhouette Score: Demonstrated good cluster separation and compactness.
-<img width="249" height="28" alt="image" src="https://github.com/user-attachments/assets/f7a8abc5-6caa-45e0-9362-6ba0afe850ff" />
+<img width="153" height="83" alt="image" src="https://github.com/user-attachments/assets/4e2aee3e-739b-4801-9079-3447acde7bfc" />
+<img width="444" height="102" alt="image" src="https://github.com/user-attachments/assets/9f3f5d88-a21e-4be7-b8c8-7f5f321c9cb0" />
 
 
-📈 Visualizations
+Purity Score: 0.92
+A purity score of approximately 0.92 demonstrates a very strong alignment between the generated clusters and the true species, indicating the model's high effectiveness.
 
-Elbow Method to choose k.
-<img width="398" height="221" alt="image" src="https://github.com/user-attachments/assets/df49e6f3-fb19-4861-a1c9-47c5a449e7f5" />
+<img width="109" height="25" alt="image" src="https://github.com/user-attachments/assets/cb70104e-229e-4aea-9b6b-c2f1b1069bdd" />
+
+Silhouette Score
+The silhouette score further confirmed good cluster separation and compactness, proving the model was successful in its task.
+
+<img width="228" height="21" alt="image" src="https://github.com/user-attachments/assets/e99cde90-1742-45a4-9a49-9601bdf64f8c" />
 
 
-Cluster plots with centroids highlighted.
-<img width="422" height="272" alt="image" src="https://github.com/user-attachments/assets/37cc879f-9fff-4d32-be6f-7c9c14c92731" />
+# 📈 Visualizations
+1. Elbow Method
+This plot shows the sum of squared distances for each number of clusters. The "elbow" at k=3 is a clear indicator of the optimal number of clusters.
+
+<img width="800" height="400" alt="Figure_1" src="https://github.com/user-attachments/assets/d9595dce-b370-405a-ba88-23b3fb2bba9e" />
 
 
-Silhouette plot to evaluate intra-cluster cohesion vs inter-cluster separation.
-<img width="430" height="275" alt="image" src="https://github.com/user-attachments/assets/311ac004-518a-4dea-aede-99215490683f" />
+
+2. Cluster Plot with Centroids
+This scatterplot visualizes the data points grouped into their respective clusters, with the cluster centroids highlighted as black 'X' markers.
+
+<img width="422" height="272" alt="image" src="https://github.com/user-attachments/assets/44cf43f5-2f12-4b44-9eb4-e7a18eb6015f" />
+
+
+
+3. Silhouette Plot
+The silhouette plot provides a visual evaluation of each cluster. The plot shows that most points have a high silhouette score, confirming that the clusters are well-formed and distinct.
+
+<img width="1000" height="600" alt="Figure_1" src="https://github.com/user-attachments/assets/218e349d-681c-4e63-a325-af681cb998b5" />
