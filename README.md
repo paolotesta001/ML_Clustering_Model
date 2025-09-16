@@ -60,7 +60,8 @@ This plot shows the sum of squared distances for each number of clusters. The "e
 2. Cluster Plot with Centroids
 This scatterplot visualizes the data points grouped into their respective clusters, with the cluster centroids highlighted as black 'X' markers.
 
-<img width="422" height="272" alt="image" src="https://github.com/user-attachments/assets/44cf43f5-2f12-4b44-9eb4-e7a18eb6015f" />
+<img width="1000" height="600" alt="Figure_1" src="https://github.com/user-attachments/assets/cf844e68-431d-4bfb-8440-cfb34bd4c9f7" />
+
 
 
 
