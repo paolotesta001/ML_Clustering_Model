@@ -1,71 +1,100 @@
-# 🐧 Penguin Species Clustering with KMeans
+# Penguin Species Clustering with KMeans
 
-This project applies unsupervised machine learning techniques to cluster penguin species based on the Palmer Penguins dataset. Using KMeans clustering, feature engineering, and evaluation metrics, we analyze how effectively the algorithm can separate species without the need for labeled data.
+An unsupervised machine learning project that clusters penguin species from the [Palmer Penguins LTER dataset](https://pallter.marine.rutgers.edu/) using KMeans. The goal is to evaluate how well an unsupervised algorithm can recover the true species labels (Adelie, Chinstrap, Gentoo) without ever seeing them during training.
 
-# 📌 Project Overview
-This analysis follows a structured four-step process:
+## Table of Contents
 
-Data Preprocessing: The dataset was prepared by dropping irrelevant columns, handling missing values, encoding categorical variables, and normalizing features to ensure consistency.
+- [Dataset](#dataset)
+- [Approach and Design Choices](#approach-and-design-choices)
+- [Results](#results)
+- [Visualizations](#visualizations)
+- [Tech Stack](#tech-stack)
 
-KMeans Clustering: The KMeans algorithm was applied. The optimal number of clusters (k) was determined using the Elbow Method to identify the point of diminishing returns in the sum of squared distances.
+## Dataset
 
-Evaluation: The performance of the clustering was evaluated using key metrics:
+The dataset comes from the Palmer Long-Term Ecological Research (LTER) program and contains 344 observations of penguins from three species collected across three islands in the Palmer Archipelago, Antarctica. Each record includes morphological measurements (culmen length and depth, flipper length, body mass), isotope ratios (Delta 15 N, Delta 13 C), and metadata (island, sex, study name, etc.).
 
-Purity Score: To measure how well our clusters align with the true penguin species labels.
+The choice of this dataset is motivated by its well-separated species structure, which makes it a good benchmark for clustering: we know there are 3 species and can measure how accurately KMeans recovers them.
 
-Silhouette Score: To assess the cohesion within each cluster and the separation between different clusters.
+## Approach and Design Choices
 
-Visualization: We visualized the results using scatterplots, centroid plots, and silhouette diagrams to provide a clear understanding of the cluster distributions and quality.
+### Why KMeans?
 
-# ⚙️ Tech Stack
-This project was built using the following Python libraries, a standard stack for data science and machine learning:
+KMeans was chosen because the problem has a clear expected structure (3 compact, roughly spherical groups of species). KMeans is well-suited for this kind of globular cluster geometry and is computationally efficient, making it a natural first choice before considering more complex algorithms like DBSCAN or Gaussian Mixture Models.
 
-Pandas & NumPy: Essential for data preprocessing, manipulation, and numerical operations.
+### Feature Selection and Encoding
 
-Matplotlib & Seaborn: Used for creating all the data visualizations.
+Irrelevant metadata columns (`studyName`, `Sample Number`, `Individual ID`, `Date Egg`, `Comments`) are dropped since they carry no biological signal. The remaining categorical variables (`Region`, `Island`, `Stage`) are one-hot encoded to convert them into numeric features that KMeans can process. `drop_first=True` is used to avoid multicollinearity between the dummy variables.
 
-Scikit-learn: The core library for implementing KMeans, data scaling, and calculating clustering metrics.
+Columns like `Sex` and `Clutch Completion` are excluded from the feature set because they do not discriminate between species — both male and female penguins exist across all three species, and clutch completion is a reproductive status, not a morphological trait.
 
-SciPy: Utilized for distance calculations, such as the cdist function.
+This encoding strategy allows the model to leverage categorical context (especially island information, since species distribution varies by island) alongside the continuous morphological measurements (culmen length, culmen depth, flipper length, body mass) and isotope ratios.
 
-# 📊 Key Results
-The unsupervised KMeans model successfully identified distinct clusters that closely align with the known penguin species.
+### Why StandardScaler Normalization?
 
-Optimal Number of Clusters: 3
-The Elbow Method analysis clearly indicated that 3 clusters was the optimal number, which precisely matches the three species of penguins in the dataset (Adelie, Chinstrap, and Gentoo).
+All features are standardized to zero mean and unit variance using StandardScaler (or an equivalent manual implementation). This is essential for KMeans because the algorithm relies on Euclidean distance — without normalization, features with larger scales (e.g., body mass in grams vs. culmen length in millimeters) would dominate the distance computation and bias cluster assignments.
 
-<img width="153" height="83" alt="image" src="https://github.com/user-attachments/assets/4e2aee3e-739b-4801-9079-3447acde7bfc" />
-<img width="444" height="102" alt="image" src="https://github.com/user-attachments/assets/9f3f5d88-a21e-4be7-b8c8-7f5f321c9cb0" />
+### Handling Missing Values
 
+Rows with missing values are dropped rather than imputed. The dataset has relatively few missing entries, so dropping them preserves data integrity without introducing artificial values that could distort the cluster structure. Imputation (e.g., mean or KNN-based) would be preferable for larger amounts of missing data, but here simplicity is favored.
 
-Purity Score: 0.92
-A purity score of approximately 0.92 demonstrates a very strong alignment between the generated clusters and the true species, indicating the model's high effectiveness.
+### Choosing k with the Elbow Method
 
-<img width="109" height="25" alt="image" src="https://github.com/user-attachments/assets/cb70104e-229e-4aea-9b6b-c2f1b1069bdd" />
+The optimal number of clusters is determined using the Elbow Method, which plots inertia (within-cluster sum of squared distances) against increasing values of k. The "elbow" — the point where adding more clusters yields diminishing returns — is found at **k = 3**, which matches the known number of species in the dataset.
 
-Silhouette Score
-The silhouette score further confirmed good cluster separation and compactness, proving the model was successful in its task.
+### Why Scikit-learn?
 
-<img width="228" height="21" alt="image" src="https://github.com/user-attachments/assets/e99cde90-1742-45a4-9a49-9601bdf64f8c" />
+The project uses scikit-learn's `KMeans` implementation, which provides a well-tested, optimized version of Lloyd's algorithm with multiple random initializations (`n_init=10`) to avoid poor local minima. Scikit-learn is also used for `StandardScaler` and silhouette metrics, keeping the pipeline consistent and reliable.
 
+## Results
 
-# 📈 Visualizations
-1. Elbow Method
-This plot shows the sum of squared distances for each number of clusters. The "elbow" at k=3 is a clear indicator of the optimal number of clusters.
+### Optimal Number of Clusters: 3
 
-<img width="800" height="400" alt="Figure_1" src="https://github.com/user-attachments/assets/d9595dce-b370-405a-ba88-23b3fb2bba9e" />
+The Elbow Method clearly identifies k = 3 as the optimal number of clusters, consistent with the three penguin species in the dataset.
 
+![image](https://github.com/user-attachments/assets/4e2aee3e-739b-4801-9079-3447acde7bfc)
+![image](https://github.com/user-attachments/assets/9f3f5d88-a21e-4be7-b8c8-7f5f321c9cb0)
 
+### Purity Score: 0.92
 
-2. Cluster Plot with Centroids
-This scatterplot visualizes the data points grouped into their respective clusters, with the cluster centroids highlighted as black 'X' markers.
+Purity measures the fraction of data points in each cluster that belong to the majority class. A score of 0.92 indicates that 92% of points are correctly grouped with members of their own species, demonstrating strong alignment between the unsupervised clusters and the true labels.
 
-<img width="1000" height="600" alt="Figure_1" src="https://github.com/user-attachments/assets/cf844e68-431d-4bfb-8440-cfb34bd4c9f7" />
+![image](https://github.com/user-attachments/assets/cb70104e-229e-4aea-9b6b-c2f1b1069bdd)
 
+### Silhouette Score
 
+The Silhouette Score measures how similar each point is to its own cluster compared to the nearest neighboring cluster. Values range from -1 (wrong cluster) to +1 (well-matched). The average silhouette score confirms good cluster cohesion and separation.
 
+![image](https://github.com/user-attachments/assets/e99cde90-1742-45a4-9a49-9601bdf64f8c)
 
-3. Silhouette Plot
-The silhouette plot provides a visual evaluation of each cluster. The plot shows that most points have a high silhouette score, confirming that the clusters are well-formed and distinct.
+## Visualizations
 
-<img width="1000" height="600" alt="Figure_1" src="https://github.com/user-attachments/assets/218e349d-681c-4e63-a325-af681cb998b5" />
+### Elbow Method
+
+The sum of squared distances (inertia) decreases as k increases. The elbow at k = 3 shows that going beyond 3 clusters provides minimal improvement, confirming the natural structure of the data.
+
+![Figure_1](https://github.com/user-attachments/assets/d9595dce-b370-405a-ba88-23b3fb2bba9e)
+
+### Cluster Scatterplot with Centroids
+
+Data points are projected onto two features (culmen length vs. culmen depth) and colored by cluster assignment. The black "X" markers indicate the cluster centroids. The clear spatial separation between clusters reflects the morphological differences between species.
+
+![Figure_1](https://github.com/user-attachments/assets/cf844e68-431d-4bfb-8440-cfb34bd4c9f7)
+
+### Silhouette Plot
+
+Each horizontal bar represents a data point, ordered by silhouette value within its cluster. Most points have high positive values, meaning they are well-placed in their assigned cluster. The red dashed line shows the global average. Clusters with uniform, high silhouette values indicate well-defined, compact groups.
+
+![Figure_1](https://github.com/user-attachments/assets/218e349d-681c-4e63-a325-af681cb998b5)
+
+## Tech Stack
+
+| Library | Purpose |
+|---|---|
+| **Pandas** | Data loading, manipulation, and crosstab analysis |
+| **NumPy** | Numerical operations and array handling |
+| **Matplotlib** | Plotting (elbow method, silhouette diagrams) |
+| **Seaborn** | Cluster scatterplot visualizations |
+| **Scikit-learn** | StandardScaler, KMeans, silhouette metrics |
+| **SciPy** | Centroid distance matrix computation (`cdist`) |
+
